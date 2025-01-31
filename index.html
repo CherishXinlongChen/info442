@@ -59,25 +59,33 @@
         {
             question: "你如何处理大额消费？",
             options: {
-                "🐿️🐢": "提前规划存钱",
-                "🐬🦅": "适当规划",
-                "🦊🦘": "直接买"
+                "🐿️": "提前规划存钱",
+                "🐬": "适当规划",
+                "🦊": "直接买了再说"
             }
         },
         {
             question: "你会冲动消费吗？",
             options: {
-                "🐢🐿️": "很理性",
-                "🐬🦅🐅": "偶尔",
-                "🦊🦘": "经常冲动"
+                "🐢": "很理性，不冲动消费",
+                "🐬": "偶尔冲动消费",
+                "🦘": "经常冲动消费"
             }
         },
         {
-            question: "你是否有紧急储蓄？",
+            question: "你是否有紧急储蓄（至少3-6个月的生活费）？",
             options: {
-                "🐿️🐢🦅": "有存款",
-                "🐬🐅": "存一点",
-                "🦘🦊": "没有存款"
+                "🦅": "有计划的储蓄",
+                "🐬": "存一点，但可能不够",
+                "🦊": "没有存款"
+            }
+        },
+        {
+            question: "你是否有固定收入来源？",
+            options: {
+                "🐅": "是的，我有固定收入",
+                "🐿️": "偶尔有收入，但不稳定",
+                "🦘": "没有，依赖存款或家人"
             }
         }
     ];
@@ -92,18 +100,18 @@
         const optionsContainer = document.getElementById("options");
         optionsContainer.innerHTML = ""; // 清空旧的选项
 
-        Object.entries(questionData.options).forEach(([types, text]) => {
+        Object.entries(questionData.options).forEach(([type, text]) => {
             const button = document.createElement("button");
             button.textContent = text;
-            button.onclick = () => selectAnswer(types);
+            button.onclick = () => selectAnswer(type);
             optionsContainer.appendChild(button);
         });
 
         document.getElementById("next-btn").style.display = "none";
     }
 
-    function selectAnswer(types) {
-        types.split("").forEach(type => scores[type]++); // 为对应金融人格加分
+    function selectAnswer(type) {
+        scores[type]++; // 给对应金融人格+1分
         document.getElementById("next-btn").style.display = "block";
     }
 
@@ -120,7 +128,9 @@
         let maxScore = Math.max(...Object.values(scores));
         let bestTypes = Object.keys(scores).filter(type => scores[type] === maxScore);
 
-        const resultText = `你的金融人格是：${bestTypes.join(" + ")} 🎉`;
+        const resultText = `你的金融人格是：${bestTypes.join(" + ")} 🎉\n\n详细得分：\n` + 
+            Object.entries(scores).map(([type, score]) => `${type}: ${score} 分`).join("\n");
+
         document.getElementById("question-container").style.display = "none";
         document.getElementById("next-btn").style.display = "none";
         document.getElementById("result").textContent = resultText;
@@ -131,4 +141,3 @@
 
 </body>
 </html>
-
